@@ -146,7 +146,7 @@ public class StartMongoDBReplicaSet {
     public static void main(String[] args)
             throws IOException {
 
-        // Create the AmazonEC2 client to communicate with
+        // Create the AmazonEC2 client to communicate with EC2
         AmazonEC2 ec2 = createEC2Client();
 
         // Create object to execute ssh commands on the
@@ -340,7 +340,8 @@ public class StartMongoDBReplicaSet {
 
         // Wait for them to start.
         List<Instance> instances =
-                waitForInstancesToStart(runResult.getReservation().getInstances());
+                waitForInstancesToStart(runResult.getReservation()
+                        .getInstances());
 
         System.out.println("Started instances.");
 
@@ -357,12 +358,13 @@ public class StartMongoDBReplicaSet {
         // Make sure the file exists.
         File dataFile = new File(LOCAL_USER_DATA_FILE);
         if (!dataFile.exists()) {
-            throw new IllegalStateException("Can not find ec2 init data file " +
-                    dataFile.getPath());
+            throw new IllegalStateException("Can not find ec2 init " +
+                    "data file " + dataFile.getPath());
         }
         // Read and convert to base64
         Base64InputStream inputStream =
-                new Base64InputStream(new FileInputStream(dataFile), true);
+                new Base64InputStream(new FileInputStream(dataFile),
+                        true);
         String userData =
                 IOUtils.toString(inputStream);
         inputStream.close();
